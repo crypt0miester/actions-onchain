@@ -1,0 +1,23 @@
+[package]
+name = "actions-onchain"
+version = "0.1.0"
+description = "Immutable actions onchain."
+edition = "2021"
+authors = ["Miester <crypt0miester@gmail.com>"]
+repository = "https://github.com/crypt0miester/actions-onchain"
+license-file = "../../LICENSE"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "actions_onchain"
+
+[features]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+cpi = ["no-entrypoint"]
+default = []
+
+[dependencies]
+anchor-lang = "0.29.0"
+solana-program = "1.18.17"
