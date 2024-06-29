@@ -1,8 +1,11 @@
-use anchor_lang::prelude::*;
-use constants::*;
-use state::{Action, ActionInstruction};
-use errors::ActionsError;
-use solana_program::program::invoke;
+use {
+    anchor_lang::prelude::*,
+    constants::*,
+    state::{Action, ActionInstruction},
+    errors::ActionsError,
+    solana_program::program::invoke,
+};
+
 mod state;
 mod constants;
 mod errors;
@@ -11,7 +14,6 @@ declare_id!("EYj4oDQT9kwSTfwhDQwXhstE4MJ9fT1RjpwaGmqVY72f");
 
 #[program]
 pub mod actions_onchain {
-
     use super::*;
 
     pub fn create_action(
@@ -109,7 +111,7 @@ pub mod actions_onchain {
             if &action_ix.program_id != ix_program_info.key {
                 return err!(ActionsError::IxnProgramInvalid);
             }
-            // create the instruction to invoke from the saved ms ix account
+            // create the instruction to invoke from the saved action ix account
             let ix = action_ix.to_instruction();
 
             // Apply data modifications
@@ -154,6 +156,7 @@ pub mod actions_onchain {
             }
 
             invoke(&ix, &ix_account_infos)?;
+            
             Ok(())
         })?;
         
