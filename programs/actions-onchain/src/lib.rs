@@ -46,7 +46,7 @@ pub mod actions_onchain {
     }
 
     pub fn add_instruction(
-        ctx: Context<AddUpdateInstruction>,
+        ctx: Context<AddInstruction>,
         action_instruction: ActionInstruction,
     ) -> Result<()> {
         let instruction = &mut ctx.accounts.instruction;
@@ -140,7 +140,7 @@ pub mod actions_onchain {
 
             // the instruction account vec, with the program account first
             let mut ix_account_infos: Vec<AccountInfo> = vec![ix_program_info.clone()];
-            
+
             // loop through the provided remaining accounts
             for account_index in 0..ix_keys.len() {
                 let ix_account_info = next_account_info(ix_iter)?.clone();
@@ -190,7 +190,7 @@ pub struct VoteOnValidation<'info> {
 
 #[derive(Accounts)]
 #[instruction(action_instruction: ActionInstruction)]
-pub struct AddUpdateInstruction<'info> {
+pub struct AddInstruction<'info> {
     #[account(mut)]
     pub creator: Signer<'info>,
     #[account(init, 
