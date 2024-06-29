@@ -9,6 +9,7 @@ Code was inspired from [SquadsMPL](https://github.com/Squads-Protocol/squads-mpl
 ## What it do?
 * Create Actions
 * Create Instructions based on the Action
+* Execute Action/Transaction
 * Users can vote if it is a good or bad Action
 
 ## TODO
