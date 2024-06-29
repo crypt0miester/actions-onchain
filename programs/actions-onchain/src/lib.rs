@@ -98,13 +98,13 @@ pub mod actions_onchain {
             );
             // check the instruction account key maches the derived pda
             if &ix_pda != action_ix_account.key {
-                return err!(ActionsError::InvalidInstructionAccount);
+                return err!(ActionsError::IxnPDAInvalid);
             }
             // get the instructions program account
             let ix_program_info: &AccountInfo = next_account_info(ix_iter)?;
             // check that it matches the submitted account
             if &action_ix.program_id != ix_program_info.key {
-                return err!(ActionsError::InvalidInstructionAccount);
+                return err!(ActionsError::IxnProgramInvalid);
             }
 
             let ix_keys = action_ix.keys.clone();

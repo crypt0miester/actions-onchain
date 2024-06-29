@@ -17,4 +17,10 @@ pub enum ActionsError {
     // 0x1774 - 6004
     #[msg("An AccountInfo is Missing from Remaining Accounts")]
     AccountInfoMissing,
+    // 0x1775 - 6005
+    #[msg("Instruction PDA does not match from Remaining Accounts")]
+    IxnPDAInvalid,
+    // 0x1776 - 6006
+    #[msg("Instruction Program ID missing from Remaining Accounts")]
+    IxnProgramInvalid,
 }
