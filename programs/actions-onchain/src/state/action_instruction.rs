@@ -35,26 +35,6 @@ impl ActionInstruction {
         Ok(())
     }
 
-    pub fn apply_modifications(
-        &mut self, 
-        data_modifications: Vec<(usize, Vec<u8>)>, 
-        key_modifications: Vec<(usize, Pubkey)>
-    ) {
-        // Apply data modifications
-        for (offset, new_data) in data_modifications {
-            if self.data_modifier.contains(&offset) && offset + new_data.len() <= self.data.len() {
-                self.data[offset..offset+new_data.len()].copy_from_slice(&new_data);
-            }
-        }
-    
-        // Apply key modifications
-        for (index, new_pubkey) in key_modifications {
-            if self.key_modifier.contains(&index) {
-                self.keys[index].pubkey = new_pubkey;
-            }
-        }
-    }
-
     pub fn to_instruction(&self) -> Instruction {
         Instruction {
             program_id: self.program_id,

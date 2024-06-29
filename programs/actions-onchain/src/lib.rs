@@ -116,21 +116,25 @@ pub mod actions_onchain {
             // Apply data modifications
             for (index_of_ix, offset, new_data) in &data_modifications {
                 if index_of_ix == &i {
-                if action_ix.data_modifier.contains(&offset) && offset + new_data.len() <= action_ix.data.len() {
-                    let offset_set = *offset;
-                    action_ix.data[offset_set..offset_set+new_data.len()].copy_from_slice(&new_data);
+                    if action_ix.data_modifier.contains(&offset) && offset + new_data.len() <= action_ix.data.len() {
+                        let offset_set = *offset;
+                        action_ix.data[offset_set..offset_set+new_data.len()].copy_from_slice(&new_data);
+                    }
+                } else {
+                    return err!(ActionsError::FoundInvalidDataModifier);
                 }
-            }
             }
         
             // Apply key modifications
             for (index_of_ix, index_of_pubkey, new_pubkey) in &key_modifications {
                 if index_of_ix == &i {
-                if action_ix.key_modifier.contains(&index_of_pubkey) {
-                    let index_set = *index_of_pubkey;
-                    action_ix.keys[index_set].pubkey = *new_pubkey;
+                    if action_ix.key_modifier.contains(&index_of_pubkey) {
+                        let index_set = *index_of_pubkey;
+                        action_ix.keys[index_set].pubkey = *new_pubkey;
+                    }
+                } else {
+                    return err!(ActionsError::FoundInvalidPubkeyModifier);
                 }
-            }
             }
 
             // loop through the provided remaining accounts
@@ -139,7 +143,7 @@ pub mod actions_onchain {
 
                 // check that the ix account keys match the submitted account keys
                 if *ix_account_info.key != ix_keys[account_index].pubkey {
-                    return err!(ActionsError::InvalidInstructionAccount);
+                    return err!(ActionsError::AccountInfoMissing);
                 }
 
                 ix_account_infos.push(ix_account_info.clone());
