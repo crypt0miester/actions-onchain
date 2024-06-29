@@ -9,7 +9,7 @@ pub struct ActionInstruction {
     pub keys: Vec<ActionAccountMeta>,   // AccountMetas of instruction
     pub data: Vec<u8>,                  // data of instruction
     pub data_modifier: Vec<usize>,      // modifiers of pubkeys
-pub key_modifier: Vec<usize>,           // modifiers of data
+    pub key_modifier: Vec<usize>,       // modifiers of data
 }
 
 impl ActionInstruction {

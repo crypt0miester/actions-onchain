@@ -199,7 +199,7 @@ pub struct AddUpdateInstruction<'info> {
     )]
     pub instruction: Account<'info, ActionInstruction>,
     #[account(mut, 
-        has_one=creator,
+        has_one = creator,
         seeds = [ACTION_PREFIX.as_bytes(), action.title.to_lowercase().as_bytes()],
         bump
     )]
