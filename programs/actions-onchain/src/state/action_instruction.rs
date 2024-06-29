@@ -5,11 +5,11 @@ use anchor_lang::{prelude::*, solana_program::instruction::Instruction};
 /// fields for modifiers.
 #[account]
 pub struct ActionInstruction {
-    pub program_id: Pubkey,
-    pub keys: Vec<ActionAccountMeta>,
-    pub data: Vec<u8>,
-    pub data_modifier: Vec<usize>,
-    pub key_modifier: Vec<usize>,
+    pub program_id: Pubkey,             // program_id of instruction
+    pub keys: Vec<ActionAccountMeta>,   // AccountMetas of instruction
+    pub data: Vec<u8>,                  // data of instruction
+    pub data_modifier: Vec<usize>,      // modifiers of pubkeys
+pub key_modifier: Vec<usize>,           // modifiers of data
 }
 
 impl ActionInstruction {

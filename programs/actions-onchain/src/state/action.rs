@@ -10,8 +10,8 @@ pub struct Action {
     pub description: String,            // action description
     pub label: String,                  // action label
     pub instruction_index: u8,          // index instructions to be executed
-    pub positive_validations: u8,      // count of positive validations from trusted sources
-    pub negative_validations: u8,      // count of negative validations from trusted sources
+    pub positive_validations: u8,       // count of positive validations from trusted sources
+    pub negative_validations: u8,       // count of negative validations from trusted sources
 }
 
 
