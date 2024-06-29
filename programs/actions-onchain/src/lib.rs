@@ -1,6 +1,8 @@
 use anchor_lang::prelude::*;
+use constants::*;
 use state::{Action, ActionInstruction};
 mod state;
+mod constants;
 
 declare_id!("EYj4oDQT9kwSTfwhDQwXhstE4MJ9fT1RjpwaGmqVY72f");
 
@@ -14,7 +16,6 @@ pub mod actions_onchain {
         title: String,
         description: String,
         label: String,
-        instruction_index: u8
     ) -> Result<()> {
         let action = &mut ctx.accounts.action;
         action.init(
@@ -23,7 +24,6 @@ pub mod actions_onchain {
             title,
             description,
             label,
-            instruction_index
         )?;
         
         Ok(())
@@ -41,14 +41,16 @@ pub mod actions_onchain {
         Ok(())
     }
 
-    pub fn add_update_instruction(
+    pub fn add_instruction(
         ctx: Context<AddUpdateInstruction>,
         action_instruction: ActionInstruction,
     ) -> Result<()> {
         let instruction = &mut ctx.accounts.instruction;
+        let action = &mut ctx.accounts.action;
         let incoming_instruction = action_instruction;
         
         instruction.init(incoming_instruction)?;
+        action.instruction_index += 1;
         
         Ok(())
     }
@@ -62,7 +64,12 @@ pub mod actions_onchain {
     label: String,
 )]
 pub struct CreateAction<'info> {
-    #[account(init, payer = creator, space = Action::get_action_size(&icon_uri, &title, &description, &label))]
+    #[account(init, 
+        payer = creator, 
+        space = 8 + Action::get_action_size(&icon_uri, &title, &description, &label),
+        seeds = [ACTION_PREFIX.as_bytes(), title.to_lowercase().as_bytes()],
+        bump
+    )]
     pub action: Account<'info, Action>,
     #[account(mut)]
     pub creator: Signer<'info>,
@@ -81,9 +88,19 @@ pub struct VoteOnValidation<'info> {
 pub struct AddUpdateInstruction<'info> {
     #[account(mut)]
     pub creator: Signer<'info>,
-    #[account(init, payer = creator, space = 8 + ActionInstruction::get_max_size(action_instruction))]
+    #[account(init, 
+        payer = creator, 
+        space = 8 + ActionInstruction::get_max_size(action_instruction),
+        seeds = [ACTION_INSTRUCTION_PREFIX.as_bytes(), action.key().as_ref(), &[action.instruction_index]],
+        bump
+    
+    )]
     pub instruction: Account<'info, ActionInstruction>,
-    #[account(mut, has_one=creator)]
+    #[account(mut, 
+        has_one=creator,
+        seeds = [ACTION_PREFIX.as_bytes(), action.title.to_lowercase().as_bytes()],
+        bump
+    )]
     pub action: Account<'info, Action>,
     pub system_program: Program<'info, System>,
 }

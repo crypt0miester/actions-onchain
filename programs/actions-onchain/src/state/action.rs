@@ -25,14 +25,13 @@ impl Action {
         title: String,
         description: String,
         label: String,
-        instruction_index: u8
     ) -> Result<()> {
         self.creator = creator;
         self.icon_uri = icon_uri;
         self.title = title;
         self.description = description;
         self.label = label;
-        self.instruction_index = instruction_index;
+        self.instruction_index = 1;
         self.positive_validations = 0;
         self.negative_validations = 0;
         Ok(())
