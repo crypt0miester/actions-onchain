@@ -106,8 +106,6 @@ pub mod actions_onchain {
             if &action_ix.program_id != ix_program_info.key {
                 return err!(ActionsError::IxnProgramInvalid);
             }
-
-            let ix_keys = action_ix.keys.clone();
             // create the instruction to invoke from the saved ms ix account
             let ix: Instruction = action_ix.to_instruction();
             // the instruction account vec, with the program account first
@@ -137,6 +135,7 @@ pub mod actions_onchain {
                 }
             }
 
+            let ix_keys = action_ix.keys.clone();
             // loop through the provided remaining accounts
             for account_index in 0..ix_keys.len() {
                 let ix_account_info = next_account_info(ix_iter)?.clone();

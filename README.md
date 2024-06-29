@@ -4,6 +4,8 @@ Actions brought on chain to make them immutable, verifieable actions.
 
 Note: the program is presented without audits. it is a weekend project written in 2 hours.
 
+Code was inspired from [SquadsMPL](https://github.com/Squads-Protocol/squads-mpl/)
+
 ## What it do?
 * Create Actions
 * Create Instructions based on the Action
