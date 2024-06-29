@@ -2,7 +2,7 @@ use anchor_lang::prelude::*;
 use constants::*;
 use state::{Action, ActionInstruction};
 use errors::ActionsError;
-use solana_program::{instruction::Instruction, program::invoke};
+use solana_program::program::invoke;
 mod state;
 mod constants;
 mod errors;
@@ -87,29 +87,30 @@ pub mod actions_onchain {
                 return err!(ActionsError::InvalidInstructionAccount);
             }
 
-            // deserialize the msIx
+            // deserialize the action_ix
             let mut ix_account_data: &[u8] = &action_ix_account.try_borrow_mut_data()?;
             let action_ix = &mut ActionInstruction::try_deserialize(&mut ix_account_data)?;
 
-            // get the instruction account pda - seeded from transaction account + the transaction accounts instruction index
+            // get the instruction account pda - seeded from action account + the action account instruction index
             let (ix_pda, _) = Pubkey::find_program_address(
                 &[ACTION_INSTRUCTION_PREFIX.as_bytes(), action.key().as_ref(), &[i]],
                 ctx.program_id,
             );
+
             // check the instruction account key maches the derived pda
             if &ix_pda != action_ix_account.key {
                 return err!(ActionsError::IxnPDAInvalid);
             }
+
             // get the instructions program account
             let ix_program_info: &AccountInfo = next_account_info(ix_iter)?;
+
             // check that it matches the submitted account
             if &action_ix.program_id != ix_program_info.key {
                 return err!(ActionsError::IxnProgramInvalid);
             }
             // create the instruction to invoke from the saved ms ix account
-            let ix: Instruction = action_ix.to_instruction();
-            // the instruction account vec, with the program account first
-            let mut ix_account_infos: Vec<AccountInfo> = vec![ix_program_info.clone()];
+            let ix = action_ix.to_instruction();
 
             // Apply data modifications
             for (index_of_ix, offset, new_data) in &data_modifications {
@@ -136,6 +137,10 @@ pub mod actions_onchain {
             }
 
             let ix_keys = action_ix.keys.clone();
+
+            // the instruction account vec, with the program account first
+            let mut ix_account_infos: Vec<AccountInfo> = vec![ix_program_info.clone()];
+            
             // loop through the provided remaining accounts
             for account_index in 0..ix_keys.len() {
                 let ix_account_info = next_account_info(ix_iter)?.clone();
@@ -151,8 +156,6 @@ pub mod actions_onchain {
             invoke(&ix, &ix_account_infos)?;
             Ok(())
         })?;
-
-
         
         Ok(())
     }
